@@ -5,8 +5,5 @@ import retrofit2.http.GET
 
 interface TodoApi {
 
-    @GET("/v1/current.json")
-    suspend fun get(
 
-    ): List<userModel>
 }

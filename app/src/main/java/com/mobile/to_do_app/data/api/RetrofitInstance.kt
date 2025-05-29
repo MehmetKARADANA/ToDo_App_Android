@@ -3,16 +3,22 @@ package com.mobile.to_do_app.data.api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitInstance {
-    //http://localhost:5000/api/todos/
-    private val baseUrl = "http://localhost:5000"
+object RetrofitInstance {
+    private val baseUrl = "http://10.0.2.2:5000"
 
-    private fun getInstance(): Retrofit {
-        return Retrofit.Builder()
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    val todoApi : TodoApi = getInstance().create(TodoApi::class.java)
+    val todoApi: TodoApi by lazy {
+        retrofit.create(TodoApi::class.java)
+    }
+
+   val authApi: AuthApi by lazy {
+        retrofit.create(AuthApi::class.java)
+    }
 }
+
