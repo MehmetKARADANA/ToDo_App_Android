@@ -7,20 +7,21 @@ import com.mobile.to_do_app.data.models.User
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 
 interface AuthApi {
 
-    @GET("/register")
+    @POST("api/users/register")
     suspend fun registerUser(
         @Body request : RegisterRequest
     ): AuthResponse
 
-    @GET("/login")
+    @POST("api/users/login")
     suspend fun loginUser(
         @Body request : LoginRequest
     ) : AuthResponse
 
-    @GET("/me")
+    @GET("api/users/me")
     suspend fun getLoggedInUser(
         @Header("Authorization")  token  :String
     ) : User

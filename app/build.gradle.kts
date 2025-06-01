@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     val retrofit_version="2.11.0"
     implementation("com.squareup.retrofit2:retrofit:${retrofit_version}")

@@ -6,4 +6,4 @@ data class RegisterRequest(
 
 data class LoginRequest(val email: String,val password: String)
 
-data class AuthResponse(val response: String,val user: User)
+data class AuthResponse(val token: String,val user: User)
