@@ -61,6 +61,8 @@ class MainActivity : ComponentActivity() {
         )
 
 
+
+
         NavHost(navController = navController, startDestination = DestinationScreen.Welcome.route) {
             composable(DestinationScreen.Signin.route) {
                 SignInScreen(navController, authViewModel)

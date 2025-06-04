@@ -31,22 +31,27 @@ fun WelcomeScreen(
     val token by authViewModel.token.collectAsState()
     val error by authViewModel.error.collectAsState()
 
-    LaunchedEffect(user, token, error) {
+    LaunchedEffect(token) {
+        if (token != null && user == null) {
+            authViewModel.fetchUser(token!!)
+        }
+    }
+
+    LaunchedEffect(user, error) {
         when {
             user != null -> {
-                // Kullanıcı başarıyla çekildiyse test ekranına yönlendir
                 navController.navigate(DestinationScreen.Test.route) {
-                    popUpTo(0) { inclusive = true } // Geriye dönüşü engelle
+                    popUpTo(0) { inclusive = true }
                 }
             }
             error != null -> {
-                // Token geçersiz olabilir, login ekranına yönlendir
                 navController.navigate(DestinationScreen.Login.route) {
                     popUpTo(0) { inclusive = true }
                 }
             }
         }
     }
+
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),

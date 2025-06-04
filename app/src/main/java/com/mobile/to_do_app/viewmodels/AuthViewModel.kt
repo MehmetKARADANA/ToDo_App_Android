@@ -31,9 +31,9 @@ class AuthViewModel(
         savedToken?.let { fetchUser(it) }
     }
 
-  /*  init {
+    init {
         tokenManager.getToken()?.let { fetchUser(it) }
-    }*/
+    }
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
@@ -69,13 +69,19 @@ class AuthViewModel(
                 _user.value = repository.getCurrentUser(tokenStr)
             } catch (e: Exception) {
                 if (e is HttpException && e.code() == 401) {
-                    _error.value = "Oturum süresi doldu. Lütfen tekrar giriş yapın."
-                    tokenManager.clearToken()
+                   logout()
                 } else {
                     _error.value = e.message
                 }
             }
         }
+    }
+
+    fun logout(){
+        tokenManager.clearToken()
+        _token.value=null
+        _user.value= null
+        _error.value = "Unauthorized - logged out"
     }
 
 
