@@ -105,7 +105,6 @@ fun SignInScreen(
             modifier = Modifier,
             showBackButton = true,
             onBackClicked = {
-                //navigateTo(navController,DestinationScreen.Welcome.route)
                 navController.popBackStack()
             })
     }) { paddingValues ->

@@ -40,15 +40,9 @@ fun WelcomeScreen(
     LaunchedEffect(user, error) {
         when {
             user != null -> {
-                navController.navigate(DestinationScreen.Test.route) {
-                    popUpTo(0) { inclusive = true }
-                }
+                navigateTo(navController,DestinationScreen.Test.route)
             }
-            error != null -> {
-                navController.navigate(DestinationScreen.Login.route) {
-                    popUpTo(0) { inclusive = true }
-                }
-            }
+
         }
     }
 

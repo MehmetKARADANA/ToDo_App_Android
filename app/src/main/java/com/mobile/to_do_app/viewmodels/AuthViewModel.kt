@@ -31,9 +31,6 @@ class AuthViewModel(
         savedToken?.let { fetchUser(it) }
     }
 
-    init {
-        tokenManager.getToken()?.let { fetchUser(it) }
-    }
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
