@@ -69,12 +69,8 @@ fun CustomAppBar(
                 containerColor = appBarContainerColor, // Dinamik olarak ayarlanır
                 titleContentColor = MaterialTheme.colorScheme.onSurface,
                 navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                // Eğer gradient kullanıyorsanız, buradaki titleContentColor ve navigationIconContentColor
-                // gradient üzerindeki okunabilirliğe göre ayarlanmalıdır.
-                // Örneğin: titleContentColor = if (useGradientBackground) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
             ),
-            // modifier = Modifier.fillMaxWidth() // Box'a geçtiği için burada modifier'ı direkt kullanmayabiliriz veya Box'tan gelen modifier'ı alır.
-            // scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
         )
     }
 }

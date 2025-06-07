@@ -29,7 +29,7 @@ fun WelcomeScreen(
 ) {
     val user by authViewModel.user.collectAsState()
     val token by authViewModel.token.collectAsState()
-    val error by authViewModel.error.collectAsState()
+   // val error by authViewModel.error.collectAsState()
 
     LaunchedEffect(token) {
         if (token != null && user == null) {
@@ -37,7 +37,7 @@ fun WelcomeScreen(
         }
     }
 
-    LaunchedEffect(user, error) {
+    LaunchedEffect(user) {
         when {
             user != null -> {
                 navigateTo(navController,DestinationScreen.Test.route)

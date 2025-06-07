@@ -7,12 +7,15 @@ import com.mobile.to_do_app.data.api.AuthApi
 import com.mobile.to_do_app.data.api.TokenManager
 import com.mobile.to_do_app.data.models.User
 import com.mobile.to_do_app.data.repository.AuthRepository
+
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-
 class AuthViewModel(
     private val repository: AuthRepository,
     private val tokenManager: TokenManager
@@ -20,32 +23,16 @@ class AuthViewModel(
 
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> = _user
+
     private val _token = MutableStateFlow<String?>(null)
     val token: StateFlow<String?> = _token
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error
+
+    private val _eventFlow = MutableSharedFlow<AuthEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        val savedToken = tokenManager.getToken()
-        Log.d("TOKEN_CHECK", "Saved token: $savedToken")
-        savedToken?.let { fetchUser(it) }
+        tokenManager.getToken()?.let { fetchUser(it) }
     }
-
-
-    fun login(email: String, password: String) {
-        viewModelScope.launch {
-            try {
-                val response = repository.login(email, password)
-                _token.value = response.token
-                _user.value = response.user
-                //User(response._id, response.name, response.email, null, null, null)
-                tokenManager.saveToken(response.token)
-            } catch (e: Exception) {
-                _error.value = e.message
-            }
-        }
-    }
-
     fun register(name: String, email: String, password: String) {
         viewModelScope.launch {
             try {
@@ -53,33 +40,53 @@ class AuthViewModel(
                 _token.value = response.token
                 _user.value = response.user
                 tokenManager.saveToken(response.token)
+
+                _eventFlow.emit(AuthEvent.Authenticated)
             } catch (e: Exception) {
-                _error.value = e.message
-                Log.e("AUTH_ERROR", "Login error", e)
+                _eventFlow.emit(AuthEvent.Error(e.message ?: "Kayıt hatası"))
             }
         }
     }
 
-    fun fetchUser(tokenStr: String) {
+    fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
-                _user.value = repository.getCurrentUser(tokenStr)
+                val response = repository.login(email, password)
+                _token.value = response.token
+                _user.value = response.user
+                tokenManager.saveToken(response.token)
+
+                _eventFlow.emit(AuthEvent.Authenticated)
             } catch (e: Exception) {
-                if (e is HttpException && e.code() == 401) {
-                   logout()
-                } else {
-                    _error.value = e.message
-                }
+                _eventFlow.emit(AuthEvent.Error(e.message ?: "Giriş hatası"))
             }
         }
     }
 
-    fun logout(){
-        tokenManager.clearToken()
-        _token.value=null
-        _user.value= null
-        _error.value = "Unauthorized - logged out"
+    fun fetchUser(token: String) {
+        viewModelScope.launch {
+            try {
+                _user.value = repository.getCurrentUser(token)
+                _eventFlow.emit(AuthEvent.Authenticated)
+            } catch (e: Exception) {
+                logout()
+            }
+        }
     }
 
+    fun logout() {
+        tokenManager.clearToken()
+        _token.value = null
+        _user.value = null
 
+        viewModelScope.launch {
+            _eventFlow.emit(AuthEvent.Unauthorized)
+        }
+    }
+
+    sealed class AuthEvent {
+        object Authenticated : AuthEvent()
+        object Unauthorized : AuthEvent()
+        data class Error(val message: String) : AuthEvent()
+    }
 }
