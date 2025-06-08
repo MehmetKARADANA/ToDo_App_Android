@@ -33,6 +33,8 @@ class TodoViewModel(
         }
     }
 
+
+
     fun addTodo(text: String) = viewModelScope.launch {
         val token = tokenManager.getToken() ?: return@launch authViewModel.logout()
         try {

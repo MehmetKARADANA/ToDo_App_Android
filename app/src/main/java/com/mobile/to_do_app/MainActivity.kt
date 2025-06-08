@@ -39,7 +39,11 @@ import com.mobile.to_do_app.viewmodels.factories.TodoViewModelFactory
 sealed class DestinationScreen(var route: String) {
     data object Login : DestinationScreen("login")
     data object Signin : DestinationScreen("signin")
-    data object Test : DestinationScreen("test")
+    data object Note : DestinationScreen("note/{id}"){
+        fun createRoute(id : String) = "note/$id"
+    }
+    data object Notes : DestinationScreen("notes")
+
     data object Welcome : DestinationScreen("welcome")
 
 }
@@ -71,14 +75,14 @@ class MainActivity : ComponentActivity() {
         val todoViewModel: TodoViewModel = viewModel(
             factory = TodoViewModelFactory(todoRepository, tokenManager,authViewModel)
         )
-        val user by authViewModel.user.collectAsState()
+
         val event = authViewModel.eventFlow
 
         LaunchedEffect(Unit) {
             event.collect { event ->
                 when (event) {
                     is AuthViewModel.AuthEvent.Authenticated -> {
-                        navController.navigate(DestinationScreen.Test.route) {
+                        navController.navigate(DestinationScreen.Notes.route) {
                             popUpTo(0) { inclusive = true }
                         }
                         Log.e("NAV_ERROR", "AUTHENTİCATED")
@@ -109,9 +113,9 @@ class MainActivity : ComponentActivity() {
                 LoginScreen(navController, authViewModel)
             }
 
-            composable(DestinationScreen.Test.route) {
+            composable(DestinationScreen.Notes.route) {
                 //TestScreen(authViewModel, navController)
-                NoteScreen(todoViewModel)
+                NoteScreen(todoViewModel,navController)
             }
 
             composable(DestinationScreen.Welcome.route) {

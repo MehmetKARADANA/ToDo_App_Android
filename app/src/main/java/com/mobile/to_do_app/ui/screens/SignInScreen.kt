@@ -92,7 +92,7 @@ fun SignInScreen(
 
     LaunchedEffect(token) {
         token?.let {
-            navController.navigate(DestinationScreen.Test.route) {
+            navController.navigate(DestinationScreen.Notes.route) {
                 popUpTo("signin") { inclusive = true }
             }
         }

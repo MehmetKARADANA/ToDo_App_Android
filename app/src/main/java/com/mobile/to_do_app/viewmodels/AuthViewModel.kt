@@ -1,21 +1,15 @@
 package com.mobile.to_do_app.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mobile.to_do_app.data.api.AuthApi
 import com.mobile.to_do_app.data.api.TokenManager
 import com.mobile.to_do_app.data.models.User
 import com.mobile.to_do_app.data.repository.AuthRepository
-
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 class AuthViewModel(
     private val repository: AuthRepository,
     private val tokenManager: TokenManager

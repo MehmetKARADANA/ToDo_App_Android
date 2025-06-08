@@ -40,7 +40,7 @@ fun WelcomeScreen(
     LaunchedEffect(user) {
         when {
             user != null -> {
-                navigateTo(navController,DestinationScreen.Test.route)
+                navigateTo(navController,DestinationScreen.Notes.route)
             }
 
         }
