@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
@@ -24,21 +25,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.R
+import com.mobile.to_do_app.ui.theme.LightBackground
 import com.mobile.to_do_app.ui.theme.background
+import com.mobile.to_do_app.ui.theme.gradientBackground
 import com.mobile.to_do_app.utils.navigateTo
 
 
 @Composable
 fun Header(navController: NavController, header: String) {
     //burası appin tamamı için statusbar
-    val statusBarColor = background
+    val statusBarColor = LightBackground
     val activity = LocalActivity.current
     activity?.window?.statusBarColor = statusBarColor.toArgb()
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .background(color = background),
+            .alpha(0f)
+            .background(gradientBackground),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

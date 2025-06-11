@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.DestinationScreen
+import com.mobile.to_do_app.ui.theme.gradientBackground
 import com.mobile.to_do_app.utils.navigateTo
 import com.mobile.to_do_app.viewmodels.AuthViewModel
 
@@ -46,13 +47,6 @@ fun WelcomeScreen(
         }
     }
 
-    val gradientBackground = Brush.verticalGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
-            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.6f),
-            MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-        )
-    )
 
     Box(
         modifier = Modifier

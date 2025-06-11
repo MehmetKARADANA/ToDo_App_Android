@@ -1,5 +1,6 @@
 package com.mobile.to_do_app.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.ui.components.Header
+import com.mobile.to_do_app.ui.theme.LightBackground
 import com.mobile.to_do_app.viewmodels.TodoViewModel
 
 @Composable
@@ -52,6 +54,7 @@ fun NoteScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
+            .background(LightBackground)
             .padding(WindowInsets.systemBars.asPaddingValues()),
         topBar = {
             Header(navController = navController, header = "Notlar")
@@ -64,6 +67,7 @@ fun NoteScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(LightBackground)
                 .padding(it)
         ) {
             Column(

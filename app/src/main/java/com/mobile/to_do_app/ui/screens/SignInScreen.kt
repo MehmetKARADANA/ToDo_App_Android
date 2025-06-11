@@ -60,6 +60,7 @@ import androidx.navigation.NavController
 import com.mobile.to_do_app.DestinationScreen
 import com.mobile.to_do_app.ui.components.CustomAppBar
 import com.mobile.to_do_app.ui.components.CustomOutlinedTextField
+import com.mobile.to_do_app.ui.theme.gradientBackground
 import com.mobile.to_do_app.utils.navigateTo
 import com.mobile.to_do_app.viewmodels.AuthViewModel
 
@@ -81,13 +82,7 @@ fun SignInScreen(
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
 
-    val gradientBackground = Brush.verticalGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
-            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.6f),
-            MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-        )
-    )
+
     val token by authViewModel.token.collectAsState()
 
     LaunchedEffect(token) {
