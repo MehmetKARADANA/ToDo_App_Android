@@ -5,19 +5,11 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,7 +18,8 @@ import com.mobile.to_do_app.data.api.TokenManager
 import com.mobile.to_do_app.data.repository.AuthRepository
 import com.mobile.to_do_app.data.repository.TodoRepository
 import com.mobile.to_do_app.ui.screens.LoginScreen
-import com.mobile.to_do_app.ui.screens.NoteScreen
+import com.mobile.to_do_app.ui.screens.NoteEditScreen
+import com.mobile.to_do_app.ui.screens.NotesScreen
 import com.mobile.to_do_app.ui.screens.SignInScreen
 import com.mobile.to_do_app.ui.screens.TestScreen
 import com.mobile.to_do_app.ui.screens.WelcomeScreen
@@ -115,7 +108,12 @@ class MainActivity : ComponentActivity() {
 
             composable(DestinationScreen.Notes.route) {
                 //TestScreen(authViewModel, navController)
-                NoteScreen(todoViewModel,navController)
+                todoViewModel.todos
+                NotesScreen(todoViewModel,navController)
+            }
+            composable(DestinationScreen.Note.route) {
+                //TestScreen(authViewModel, navController)
+                NoteEditScreen(navController)
             }
 
             composable(DestinationScreen.Welcome.route) {
