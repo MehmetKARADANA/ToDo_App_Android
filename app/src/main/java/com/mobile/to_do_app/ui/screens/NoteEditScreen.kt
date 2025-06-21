@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,24 +25,33 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.DestinationScreen
 import com.mobile.to_do_app.utils.navigateTo
+import com.mobile.to_do_app.viewmodels.TodoViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteEditScreen(
-    navController: NavController
-   /* id : String,
-    onTitleChange: (String) -> Unit,
-    onContentChange: (String) -> Unit,
-    onSaveClick: () -> Unit,
-    onBackClick: () -> Unit*/
+    navController: NavController,
+    todoViewModel: TodoViewModel
+    /* id : String,
+     onTitleChange: (String) -> Unit,
+     onContentChange: (String) -> Unit,
+     onSaveClick: () -> Unit,
+     onBackClick: () -> Unit*/
 ) {
+
+    val todo = todoViewModel.selectedTodo.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick ={ navigateTo(navController,DestinationScreen.Notes.route) }) {
+                    IconButton(onClick = {
+                        navigateTo(
+                            navController,
+                            DestinationScreen.Notes.route
+                        )
+                    }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Geri")
                     }
                 },
@@ -53,15 +63,15 @@ fun NoteEditScreen(
             )
         }
     ) { padding ->
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
         ) {
             OutlinedTextField(
-                value =    "Title",
-                onValueChange = {/*onTitleChange*/},
+                value = "Title",
+                onValueChange = {/*onTitleChange*/ },
                 placeholder = { Text("Başlık") },
                 textStyle = androidx.compose.ui.text.TextStyle(
                     fontSize = 22.sp,
@@ -74,8 +84,8 @@ fun NoteEditScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                value = "Content",
-                onValueChange ={} /*onContentChange*/,
+                value = todo.value?.text ?: "todo boş",
+                onValueChange = {} /*onContentChange*/,
                 placeholder = { Text("Not içeriği...") },
                 textStyle = androidx.compose.ui.text.TextStyle(fontSize = 16.sp),
                 modifier = Modifier

@@ -1,5 +1,6 @@
 package com.mobile.to_do_app.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +34,7 @@ import androidx.navigation.NavController
 import com.mobile.to_do_app.DestinationScreen
 import com.mobile.to_do_app.ui.components.Header
 import com.mobile.to_do_app.ui.theme.LightBackground
+import com.mobile.to_do_app.utils.navigateTo
 import com.mobile.to_do_app.viewmodels.TodoViewModel
 
 @Composable
@@ -51,7 +53,17 @@ fun NotesScreen(
             Header(navController = navController, header = "Notlar")
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {navController.navigate(DestinationScreen.Note.route)}) {
+            FloatingActionButton(onClick = {
+
+                todoViewModel.addTodo("Yeni Not") { newTodo ->
+                    if (newTodo != null) {
+                        todoViewModel.getTodoById(newTodo.id.toString())
+                        navigateTo(navController,DestinationScreen.Note.createRoute(newTodo.id.toString()))
+                    } else {
+                        Log.e("YeniTodo", "Ekleme başarısız!")
+                    }
+                }
+            }) {
                 Text("Yeni Not", modifier = Modifier.padding(16.dp))
             }
         }) {
@@ -75,6 +87,8 @@ fun NotesScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
                                 .clickable {
+                                    todoViewModel.getTodoById(todo.id.toString())
+                                    navigateTo(navController,DestinationScreen.Note.createRoute(todo.id.toString()))
                                 },
                         ) {
                             Row(

@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TodoApi {
@@ -35,4 +36,11 @@ interface TodoApi {
         @Header("Authorization") token: String,
         @Query("id") id: String
     ): Map<String, String>
+
+    @GET("api/todos/{id}")
+    suspend fun getTodoById(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): todoModel
+
 }

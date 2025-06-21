@@ -24,5 +24,8 @@ class TodoRepository() {
     suspend fun deleteTodo(token: String, id: String): String {
         return api.deleteTodo("Bearer $token", id)["id"] ?: id
     }
+    suspend fun getTodoById(token: String, id: String): todoModel {
+        return api.getTodoById("Bearer $token", id)
+    }
 
 }

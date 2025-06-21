@@ -1,5 +1,6 @@
 package com.mobile.to_do_app.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobile.to_do_app.data.api.TokenManager
@@ -20,6 +21,8 @@ class TodoViewModel(
 
     private val _todos = MutableStateFlow<List<todoModel>>(emptyList())
     val todos: StateFlow<List<todoModel>> = _todos
+    private val _selectedTodo = MutableStateFlow<todoModel?>(null)
+    val selectedTodo: StateFlow<todoModel?> = _selectedTodo
 
     init {
         loadTodos()
@@ -33,17 +36,44 @@ class TodoViewModel(
         }
     }
 
-
-
-    fun addTodo(text: String) = viewModelScope.launch {
+    fun addTodo(text: String, onResult: (todoModel?) -> Unit) = viewModelScope.launch {
         val token = tokenManager.getToken() ?: return@launch authViewModel.logout()
+
         try {
             val newTodo = repository.addTodo(token, TodoRequest(text))
             _todos.value += newTodo
+            onResult(newTodo)
         } catch (e: HttpException) {
             if (e.code() == 401) authViewModel.logout()
+            onResult(null)
         }
     }
+    fun getTodoById(id: String) = viewModelScope.launch {
+        val token = tokenManager.getToken() ?: return@launch authViewModel.logout()
+
+        try {
+            val todo = repository.getTodoById(token, id)
+            Log.d("TodoDetail", "Todo: ${todo.text}")
+            // İstersen burada todo'yu bir State ile UI'da gösterebilirsin
+            _selectedTodo.value = todo
+        } catch (e: HttpException) {
+            if (e.code() == 401) authViewModel.logout()
+            Log.e("TodoDetail", "Todo alınamadı: ${e.message()}")
+        }
+    }
+
+
+
+    /*
+        fun addTodo(text: String) = viewModelScope.launch {
+            val token = tokenManager.getToken() ?: return@launch authViewModel.logout()
+            try {
+                val newTodo = repository.addTodo(token, TodoRequest(text))
+                _todos.value += newTodo
+            } catch (e: HttpException) {
+                if (e.code() == 401) authViewModel.logout()
+            }
+        }*/
 
     fun deleteTodo(id: String) = viewModelScope.launch {
         val token = tokenManager.getToken() ?: return@launch authViewModel.logout()
