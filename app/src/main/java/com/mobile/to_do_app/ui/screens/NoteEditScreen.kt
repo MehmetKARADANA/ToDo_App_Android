@@ -18,8 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,31 +35,39 @@ import com.mobile.to_do_app.viewmodels.TodoViewModel
 @Composable
 fun NoteEditScreen(
     navController: NavController,
-    todoViewModel: TodoViewModel
-    /* id : String,
-     onTitleChange: (String) -> Unit,
-     onContentChange: (String) -> Unit,
-     onSaveClick: () -> Unit,
-     onBackClick: () -> Unit*/
+    todoViewModel: TodoViewModel,
+     id : String
 ) {
 
+
+
     val todo = todoViewModel.selectedTodo.collectAsState()
+
+    val text = remember {
+        mutableStateOf(todo.value?.text.orEmpty())
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
                     IconButton(onClick = {
-                        navigateTo(
-                            navController,
-                            DestinationScreen.Notes.route
-                        )
+                        todoViewModel.updateTodo(id,text.value){
+                            navigateTo(
+                                navController,
+                                DestinationScreen.Notes.route
+                            )
+                        }
+
                     }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Geri")
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}/*onSaveClick*/) {
+                    IconButton(onClick = {
+                        todoViewModel.updateTodo(id,text.value){}
+                    }) {
                         Icon(imageVector = Icons.Default.Check, contentDescription = "Kaydet")
                     }
                 }
@@ -84,9 +95,9 @@ fun NoteEditScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                value = todo.value?.text ?: "todo boş",
-                onValueChange = {} /*onContentChange*/,
-                placeholder = { Text("Not içeriği...") },
+                value = text.value,
+                onValueChange = {text.value=it},
+                placeholder = { Text("Not") },
                 textStyle = androidx.compose.ui.text.TextStyle(fontSize = 16.sp),
                 modifier = Modifier
                     .fillMaxSize()

@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -42,6 +43,10 @@ fun NotesScreen(
     todoViewModel: TodoViewModel,
     navController: NavController
 ) {
+
+    LaunchedEffect (Unit){
+        todoViewModel.loadTodos()
+    }
     val todos by todoViewModel.todos.collectAsState()
 
     Scaffold(
@@ -60,7 +65,7 @@ fun NotesScreen(
                         todoViewModel.getTodoById(newTodo.id.toString())
                         navigateTo(navController,DestinationScreen.Note.createRoute(newTodo.id.toString()))
                     } else {
-                        Log.e("YeniTodo", "Ekleme başarısız!")
+                        Log.e("Yeni Todo", "Ekleme başarısız!")
                     }
                 }
             }) {

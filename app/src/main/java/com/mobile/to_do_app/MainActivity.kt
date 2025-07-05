@@ -115,8 +115,11 @@ class MainActivity : ComponentActivity() {
                 //TestScreen(authViewModel, navController)
                 val noteId=it.arguments?.getString("id")
 
+                noteId?.let {
+                    NoteEditScreen(navController,id=noteId, todoViewModel = todoViewModel)
+                }
 
-                    NoteEditScreen(navController,todoViewModel)
+
 
 
             }

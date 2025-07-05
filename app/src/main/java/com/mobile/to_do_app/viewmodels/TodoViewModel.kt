@@ -7,10 +7,12 @@ import com.mobile.to_do_app.data.api.TokenManager
 import com.mobile.to_do_app.data.models.TodoRequest
 import com.mobile.to_do_app.data.models.todoModel
 import com.mobile.to_do_app.data.repository.TodoRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class TodoViewModel(
@@ -30,7 +32,7 @@ class TodoViewModel(
     fun loadTodos() = viewModelScope.launch {
         val token = tokenManager.getToken() ?: return@launch authViewModel.logout()
         try {
-            _todos.value = repository.getTodos(token)
+            _todos.value = repository.getTodos(token).sortedBy { it.updatedAt}.asReversed()
         } catch (e: HttpException) {
             if (e.code() == 401) authViewModel.logout()
         }
@@ -85,16 +87,21 @@ class TodoViewModel(
         }
     }
 
-    fun updateTodo(id: String, newText: String) = viewModelScope.launch {
+    fun updateTodo(id: String, newText: String, onComplete: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         val token = tokenManager.getToken() ?: return@launch authViewModel.logout()
         try {
             val updatedTodo = repository.updateTodo(token, id, TodoRequest(newText))
             _todos.value = _todos.value.map { todo ->
                 if (todo.id == id) updatedTodo else todo
             }
+
+            withContext(Dispatchers.Main) {
+                onComplete()
+            }
         } catch (e: HttpException) {
             if (e.code() == 401) authViewModel.logout()
         }
+
     }
 
 }
