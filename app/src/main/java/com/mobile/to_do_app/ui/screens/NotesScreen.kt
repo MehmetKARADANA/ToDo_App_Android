@@ -29,14 +29,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.DestinationScreen
 import com.mobile.to_do_app.ui.components.Header
+import com.mobile.to_do_app.ui.components.Loading
 import com.mobile.to_do_app.ui.theme.LightBackground
 import com.mobile.to_do_app.utils.navigateTo
 import com.mobile.to_do_app.viewmodels.TodoViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
@@ -44,10 +47,12 @@ fun NotesScreen(
     navController: NavController
 ) {
 
-    LaunchedEffect (Unit){
+    LaunchedEffect(Unit) {
         todoViewModel.loadTodos()
     }
     val todos by todoViewModel.todos.collectAsState()
+
+    val loading = todoViewModel.setLoad.value
 
     Scaffold(
         modifier = Modifier
@@ -62,8 +67,13 @@ fun NotesScreen(
 
                 todoViewModel.addTodo("Yeni Not") { newTodo ->
                     if (newTodo != null) {
-                        todoViewModel.getTodoById(newTodo.id.toString())
-                        navigateTo(navController,DestinationScreen.Note.createRoute(newTodo.id.toString()))
+                        todoViewModel.getTodoById(newTodo.id.toString()){
+                            navigateTo(
+                                navController,
+                                DestinationScreen.Note.createRoute(newTodo.id.toString())
+                            )
+                        }
+
                     } else {
                         Log.e("Yeni Todo", "Ekleme başarısız!")
                     }
@@ -72,44 +82,52 @@ fun NotesScreen(
                 Text("Yeni Not", modifier = Modifier.padding(16.dp))
             }
         }) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(LightBackground)
-                .padding(it)
-        ) {
-            Column(
+        if (loading) {
+            Loading()
+        } else {
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .background(LightBackground)
+                    .padding(it)
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                LazyColumn {
-                    items(todos) { todo ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                                .clickable {
-                                    todoViewModel.getTodoById(todo.id.toString())
-                                    navigateTo(navController,DestinationScreen.Note.createRoute(todo.id.toString()))
-                                },
-                        ) {
-                            Row(
+                    LazyColumn {
+                        items(todos) { todo ->
+                            Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                    .padding(vertical = 4.dp)
+                                    .clickable {
+                                        todoViewModel.getTodoById(todo.id.toString()){
+                                            navigateTo(
+                                                navController,
+                                                DestinationScreen.Note.createRoute(todo.id.toString())
+                                            )
+                                        }
+                                    },
                             ) {
-                                Text(text = todo.text.take(15))
-                                IconButton(onClick = {
-                                    todo.id?.let { todoViewModel.deleteTodo(it) }
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = "Sil"
-                                    )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(text = todo.text.take(15))
+                                    IconButton(onClick = {
+                                        todo.id?.let { todoViewModel.deleteTodo(it) }
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Sil"
+                                        )
+                                    }
                                 }
                             }
                         }

@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.DestinationScreen
+import com.mobile.to_do_app.ui.components.Loading
 import com.mobile.to_do_app.utils.navigateTo
 import com.mobile.to_do_app.viewmodels.TodoViewModel
 
@@ -40,7 +42,7 @@ fun NoteEditScreen(
 ) {
 
 
-
+    val loading = todoViewModel.setLoad.value
     val todo = todoViewModel.selectedTodo.collectAsState()
 
     val text = remember {
@@ -74,16 +76,20 @@ fun NoteEditScreen(
             )
         }
     ) { padding ->
+
+        if(loading){
+            Loading()
+        }else{
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            OutlinedTextField(
+            TextField(
                 value = "Title",
-                onValueChange = {/*onTitleChange*/ },
-                placeholder = { Text("Başlık") },
+                onValueChange = {  },
+                //placeholder = { Text("Başlık") },
                 textStyle = androidx.compose.ui.text.TextStyle(
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
@@ -105,5 +111,5 @@ fun NoteEditScreen(
                 maxLines = Int.MAX_VALUE
             )
         }
-    }
+    }}
 }

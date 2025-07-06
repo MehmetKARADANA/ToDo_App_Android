@@ -107,21 +107,16 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(DestinationScreen.Notes.route) {
-                //TestScreen(authViewModel, navController)
+
                 todoViewModel.todos
                 NotesScreen(todoViewModel,navController)
             }
             composable(DestinationScreen.Note.route) {
-                //TestScreen(authViewModel, navController)
                 val noteId=it.arguments?.getString("id")
 
                 noteId?.let {
                     NoteEditScreen(navController,id=noteId, todoViewModel = todoViewModel)
                 }
-
-
-
-
             }
 
             composable(DestinationScreen.Welcome.route) {

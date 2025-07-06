@@ -85,6 +85,7 @@ fun SignInScreen(
 
     val token by authViewModel.token.collectAsState()
 
+    //checkSıgnedIn fonksiyonu gelcek
     LaunchedEffect(token) {
         token?.let {
             navController.navigate(DestinationScreen.Notes.route) {

@@ -1,5 +1,6 @@
 package com.mobile.to_do_app.viewmodels
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobile.to_do_app.data.api.TokenManager
@@ -14,7 +15,7 @@ class AuthViewModel(
     private val repository: AuthRepository,
     private val tokenManager: TokenManager
 ) : ViewModel() {
-
+//signın paramtresi ve kotrolü ekle
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> = _user
 
@@ -24,8 +25,15 @@ class AuthViewModel(
     private val _eventFlow = MutableSharedFlow<AuthEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    val signIn = mutableStateOf(false)
+
+
     init {
-        tokenManager.getToken()?.let { fetchUser(it) }
+        tokenManager.getToken()?.let { fetchUser(it) }.let {
+            if (it !=null){
+                signIn.value=true
+            }
+        }
     }
     fun register(name: String, email: String, password: String) {
         viewModelScope.launch {
@@ -69,6 +77,7 @@ class AuthViewModel(
     }
 
     fun logout() {
+        signIn.value=false
         tokenManager.clearToken()
         _token.value = null
         _user.value = null

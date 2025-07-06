@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.DestinationScreen
 import com.mobile.to_do_app.ui.theme.gradientBackground
+import com.mobile.to_do_app.utils.CheckSignedIn
 import com.mobile.to_do_app.utils.navigateTo
 import com.mobile.to_do_app.viewmodels.AuthViewModel
 
@@ -30,22 +31,8 @@ fun WelcomeScreen(
 ) {
     val user by authViewModel.user.collectAsState()
     val token by authViewModel.token.collectAsState()
-   // val error by authViewModel.error.collectAsState()
-
-    LaunchedEffect(token) {
-        if (token != null && user == null) {
-            authViewModel.fetchUser(token!!)
-        }
-    }
-
-    LaunchedEffect(user) {
-        when {
-            user != null -> {
-                navigateTo(navController,DestinationScreen.Notes.route)
-            }
-
-        }
-    }
+  //  val error by authViewModel.error.collectAsState()
+    CheckSignedIn(vm = authViewModel,navController=navController)
 
 
     Box(
