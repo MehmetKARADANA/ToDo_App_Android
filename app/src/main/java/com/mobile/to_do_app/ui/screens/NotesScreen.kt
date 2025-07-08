@@ -38,12 +38,14 @@ import com.mobile.to_do_app.ui.components.Header
 import com.mobile.to_do_app.ui.components.Loading
 import com.mobile.to_do_app.ui.theme.LightBackground
 import com.mobile.to_do_app.utils.navigateTo
+import com.mobile.to_do_app.viewmodels.AuthViewModel
 import com.mobile.to_do_app.viewmodels.TodoViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
     todoViewModel: TodoViewModel,
+    authViewModel: AuthViewModel,
     navController: NavController
 ) {
 
@@ -60,7 +62,9 @@ fun NotesScreen(
             .background(LightBackground)
             .padding(WindowInsets.systemBars.asPaddingValues()),
         topBar = {
-            Header(navController = navController, header = "Notlar")
+            Header(navController = navController, header = "Notlar", onLogout = {
+                authViewModel.logout()
+            })
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {

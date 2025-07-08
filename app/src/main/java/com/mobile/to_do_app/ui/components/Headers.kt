@@ -26,13 +26,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mobile.to_do_app.R
 import com.mobile.to_do_app.ui.theme.LightBackground
-import com.mobile.to_do_app.ui.theme.background
 import com.mobile.to_do_app.ui.theme.gradientBackground
-import com.mobile.to_do_app.utils.navigateTo
 
 
 @Composable
-fun Header(navController: NavController, header: String) {
+fun Header(navController: NavController, header: String, onLogout: () -> Unit) {
     //burası appin tamamı için statusbar
     val statusBarColor = LightBackground
     val activity = LocalActivity.current
@@ -41,32 +39,18 @@ fun Header(navController: NavController, header: String) {
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .alpha(0f)
-            .background(gradientBackground),
+            .alpha(1f)
+            .background(LightBackground),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(36.dp))
-        /* Icon(
-             painter = painterResource(R.drawable.information),
-             contentDescription = "information",
-             tint = Color.White,
-             modifier = Modifier
-                 .padding(start = 12.dp)
-                 .size(24.dp)
-                 .clickable {
-                     navigateTo(
-                         navController = navController,
-                         route = DestinationScreen.Info.route
-                     )
-                 }
-         )*/
         Text(
             text = header,
             // fontFamily = FontFamily.Default,
             fontWeight = FontWeight.W500,
             fontSize = 22.sp,
-           // color = textColor
+            color = Color.Black
         )
         Icon(
             painter = painterResource(R.drawable.logout),
@@ -76,7 +60,7 @@ fun Header(navController: NavController, header: String) {
                 .padding(end = 28.dp)
                 .size(24.dp)
                 .clickable {
-
+                    onLogout.invoke()
                 }
         )
     }
